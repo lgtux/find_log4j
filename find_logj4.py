@@ -2,7 +2,7 @@ import os
 import sys
 import hashlib
 from signal import signal, SIGINT
-
+from os import path
 
 # sha256 cksum lookup
 cksumlookup = {}
@@ -57,8 +57,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         load_sums(sys.argv[1])
     else:
-        load_sums("logj4_sha256sums.txt")
+        load_sums("log4j_sha256sums.txt")
 
     # Getting the current work directory (cwd)
-    curdir = os.getcwd()
+    curdir = input("Enter full path you want to scan here:  ")
     matchfilenames(curdir)
