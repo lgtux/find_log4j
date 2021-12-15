@@ -1,6 +1,7 @@
 import os
 import sys
 import hashlib
+import argparse
 from signal import signal, SIGINT
 
 
@@ -54,11 +55,27 @@ def matchfilenames(thisdir):
 if __name__ == "__main__":
     signal(SIGINT, handler)
 
-    if len(sys.argv) > 1:
-        load_sums(sys.argv[1])
-    else:
-        load_sums("logj4_sha256sums.txt")
+    parser = argparse.ArgumentParser(
+        description='scan the directory looking for potential vunerable log4j jar files')
 
-    # Getting the current work directory (cwd)
-    curdir = os.getcwd()
-    matchfilenames(curdir)
+    # -d directory -c configfile
+    parser.add_argument("-d", "--directory",
+        help="directory to scan, defaults to current directory")
+    parser.add_argument("-c", "--config",
+        help="file containing the SHA256 sums of log4j jar files")
+
+    args = parser.parse_args()
+
+    # handle some defaults
+    scandir = args.directory
+    configfile = args.config
+    if args.directory is None:
+        scandir = os.getcwd()
+    if args.config is None:
+        configfile = "logj4_sha256sums.txt"
+
+    # load the SHA256 sums to compare against
+    load_sums(configfile)
+
+    # match filenames and try to match SHA256 sums
+    matchfilenames(scandir)
