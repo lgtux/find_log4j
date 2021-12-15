@@ -1,22 +1,24 @@
-# find_log4j
-Locate vunerable log4j files.
+# FIND_LOG4J SCRIPT
 
-Added a checksum files of potentially vunerable log4j versions (obtained via maven).
-
-Feel free to do whatever you like with this, it's just for Python learning.
+## Locate vunerable log4j files.
 
 It tries to find log4j jar files and match their filenames, if found it checks the sha256 hash to compare.
 If the filename is log4j-core.jar or log4j-api.jar, then it gets the hash and tries to match hash instead of filename.
 
-Comments welcomed.
+Note: _Checksum files of potentially vunerable log4j versions obtained via Maven._ 
 
-Usage: python3 find_log4j.py [optional sha256 filename]  
-   - if no option used, it tries to load the sha256 list from the current directory
+## Usage: 
 
-it just searches the current directory tree.
+```
+$ python3 log4j_finder.py
+Enter full path you want to scan here:  /some/path/here/
+```
 
-e.g.
 
+## Results are listed from the search:
+```
 ./lib/log4j-api.jar  matches vulnerable  log4j-api-2.6.2.jar
 ./lib/log4j-api-2.14.1.jar     MATCH, vulnerable file detected
+```
 
+### Original Source: https://github.com/lgtux/find_log4j
