@@ -3,7 +3,7 @@ import sys
 import hashlib
 import argparse
 from signal import signal, SIGINT
-
+from zipfile import ZipFile
 
 # sha256 cksum lookup
 cksumlookup = {}
@@ -36,6 +36,15 @@ def handler(signal_received, frame):
     exit(0)
 
 
+def check_for_jndi(filename):
+    with ZipFile(filename, 'r') as zipObj:
+        zipList = zipObj.namelist()
+
+    for elem in zipList:
+        if elem.endswith("JndiLookup.class"):
+            print("\n", elem, " found, it is recommended to remove this class")
+
+
 def matchfilenames(thisdir):
     # r=root, d=directories, f = files
     for r, d, f in os.walk(thisdir):
@@ -45,11 +54,13 @@ def matchfilenames(thisdir):
                 cksum = get_sha256sum(fullfilename)
                 if cksum == log4jdict[file]:
                     print(fullfilename, "    MATCH, vulnerable file detected")
+                    check_for_jndi(fullfilename)
             if file == "log4j-core.jar" or file == "log4j-api.jar":
                 fullfilename = os.path.join(r, file)
                 cksum = get_sha256sum(fullfilename)
                 if cksum in cksumlookup:
                     print(fullfilename, " matches vulnerable ", cksumlookup[cksum])
+                    check_for_jndi(fullfilename)
 
 
 if __name__ == "__main__":
