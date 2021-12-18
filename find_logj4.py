@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""find_log4j.py
+
+   A simple script to find log4j jar files and try to determine
+   if they are the vunerable versions.
+   If the jar filename matches then it compares SHA256 hash against
+   known vunerable versions.
+   It will display a message for each vunerable version found.
+
+"""
+
 import os
 import sys
 import hashlib
@@ -10,6 +21,8 @@ cksumlookup = {}
 
 # sha256 filename lookup
 log4jdict = {}
+
+exit_status = 0
 
 
 def load_sums(filename):
@@ -33,32 +46,35 @@ def get_sha256sum(filepath):
 
 def handler(signal_received, frame):
     # Handle any cleanup here
-    exit(0)
+    sys.exit(0)
 
 
 def check_for_jndi(filename):
-    with ZipFile(filename, 'r') as zipObj:
-        zipList = zipObj.namelist()
+    with ZipFile(filename, 'r') as zip_file:
+        zip_list = zip_file.namelist()
 
-    for elem in zipList:
+    for elem in zip_list:
         if elem.endswith("JndiLookup.class"):
             print("\n", elem, " found, it is recommended to remove this class")
 
 
 def matchfilenames(thisdir):
+    global exit_status
     # r=root, d=directories, f = files
-    for r, d, f in os.walk(thisdir):
+    for r, _, f in os.walk(thisdir):
         for file in f:
             if file in log4jdict:
                 fullfilename = os.path.join(r, file)
                 cksum = get_sha256sum(fullfilename)
                 if cksum == log4jdict[file]:
+                    exit_status = 1
                     print(fullfilename, "    MATCH, vulnerable file detected")
                     check_for_jndi(fullfilename)
-            if file == "log4j-core.jar" or file == "log4j-api.jar":
+            if file in ('log4j-core.jar', 'log4j-api.jar'):
                 fullfilename = os.path.join(r, file)
                 cksum = get_sha256sum(fullfilename)
                 if cksum in cksumlookup:
+                    exit_status = 1
                     print(fullfilename, " matches vulnerable ", cksumlookup[cksum])
                     check_for_jndi(fullfilename)
 
@@ -71,9 +87,9 @@ if __name__ == "__main__":
 
     # -d directory -c configfile
     parser.add_argument("-d", "--directory",
-        help="directory to scan, defaults to current directory")
+                        help="directory to scan, defaults to current directory")
     parser.add_argument("-c", "--config",
-        help="file containing the SHA256 sums of log4j jar files")
+                        help="file containing the SHA256 sums of log4j jar files")
 
     args = parser.parse_args()
 
@@ -90,3 +106,5 @@ if __name__ == "__main__":
 
     # match filenames and try to match SHA256 sums
     matchfilenames(scandir)
+
+    sys.exit(exit_status)
