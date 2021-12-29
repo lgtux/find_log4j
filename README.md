@@ -35,4 +35,8 @@ https://www.truesec.com/hub/blog/apache-log4j-injection-vulnerability-cve-2021-4
 
 https://www.lunasec.io/docs/blog/log4j-zero-day-update-on-cve-2021-45046/
 
+https://nvd.nist.gov/vuln/detail/CVE-2021-44832
+
+
+
 
