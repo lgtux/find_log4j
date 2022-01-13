@@ -55,7 +55,7 @@ def check_for_jndi(filename):
 
     for elem in zip_list:
         if elem.endswith("JndiLookup.class"):
-            print("\n", elem, " found, it is recommended to remove this class")
+            print("Warning ", filename, " contains JndiLookup.class, it is recommended to remove this")
 
 
 def matchfilenames(thisdir):
@@ -68,7 +68,7 @@ def matchfilenames(thisdir):
                 cksum = get_sha256sum(fullfilename)
                 if cksum == log4jdict[file]:
                     exit_status = 1
-                    print(fullfilename, "    MATCH, vulnerable file detected")
+                    print("Matched ", fullfilename, "   vulnerable file detected")
                     check_for_jndi(fullfilename)
             if file in ('log4j-core.jar', 'log4j-api.jar'):
                 fullfilename = os.path.join(r, file)
