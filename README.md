@@ -18,9 +18,10 @@ Comments welcomed.
 
 ```
 $ python3 find_logj4.py -d . -c logj4_sha256sums.txt
+Matched  /home/user/Downloads/log4j-api-2.15.0.jar    vulnerable file detected
+Matched  /home/user/Downloads/log4j-core-2.16.0.jar    vulnerable file detected
+Warning  /home/user/Downloads/log4j-core-2.16.0.jar  contains JndiLookup.class, it is recommended to remove this
 
-./lib/log4j-api.jar  matches vulnerable  log4j-api-2.6.2.jar
-./lib/log4j-api-2.14.1.jar     MATCH, vulnerable file detected
 ```
 
 ## Links
