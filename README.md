@@ -1,7 +1,7 @@
 # find_log4j
 
 Locate vunerable log4j files.
-The current advice is to upgrade for log4j v2.17.1, this script can help find older versions.
+The current advice is to upgrade for log4j v2.17.2, this script can help find older versions.
 
 ## Description 
 
